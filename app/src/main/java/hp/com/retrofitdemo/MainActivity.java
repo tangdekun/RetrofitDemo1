@@ -1,7 +1,9 @@
 package hp.com.retrofitdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.List;
 import hp.com.retrofitdemo.bean.JokeBean;
 import hp.com.retrofitdemo.bean.JsonBean;
 import hp.com.retrofitdemo.inter.JokeInterf;
+import hp.com.rxjava.RxJavaActivity;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -19,7 +22,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  implements View.OnClickListener{
 
     //http://japi.juhe.cn/joke/content/list.from?key=您申请的KEY&page=2&pagesize=10&sort=asc&time=1418745237
     private static final String TAG = "MainActivity";
@@ -132,6 +135,16 @@ public class MainActivity extends AppCompatActivity {
                         })
 
         );
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+            case R.id.rxjava_bt:
+                startActivity(new Intent(MainActivity.this, RxJavaActivity.class));
+            break;
+        }
+
     }
 }
 
