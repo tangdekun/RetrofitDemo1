@@ -41,6 +41,8 @@ public class Constant {
      * //http://japi.juhe.cn/joke/content/list.from?key=您申请的KEY&page=2&pagesize=10&sort=asc&time=1418745237
      */
     public final static String BASE_URL = "http://japi.juhe.cn/";
-
-
+    //http://blog.csdne.net/u014695188/article/details/52985514
+//    http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0915/3460.html
+//    http://blog.csdn.net/u014165119/article/details/49280779
+//    http://www.tuicool.com/articles/AveimyQ
 }
