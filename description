@@ -1,0 +1,62 @@
+一、Retrofit的功能
+1.Retrofit 把REST API返回的数据转化为Java对象方便操作。
+2.封装了网络代码的调用。
+
+二、创建业务请求接口
+
+public interface GitHubService {
+  @GET("/users/{user}/repos")
+  List<Repo> listRepos(@Path("user") String user);
+}
+ @GET注解就表示get请求，
+ @Query表示请求参数，将会以key=value的方式拼接在url后面
+
+三、创建Retrofit实例，并完成相应的配置
+Retrofit retrofit = new Retrofit.Builder()
+    .baseUrl("https://api.douban.com/v2/")
+    .addConverterFactory(GsonConverterFactory.create())
+    .build();
+
+ 1.baseUrl：baseUrl就是网络请求URL相对固定的地址，一般包括请求协议（如Http）、域名或IP地址、端口号等，当然还会有很多其他的配置
+ 2.addConverterFactory方法表示需要用什么转换器来解析返回值，就是类型转换器工厂
+
+四、调用请求接口，返回回调实例
+Call<BookSearchResponse> call = mBlueService.getSearchBooks("小王子", "", 0, 3);
+
+五、使用回调完成异步和同步请求
+1.使用Call实例完成异步和同步请求
+  (1)同步请求 execute()
+     BookSearchResponse response = call.execute().body();
+     注意：网络请求属于耗时操作，一定要在子线程中完成，不能直接在UI线程执行，不然会crash
+  （2）异步请求 enqueue（）
+     call.enqueue(new Callback<BookSearchResponse>() {
+       @Override
+       public void onResponse(Call<BookSearchResponse> call, Response<BookSearchResponse> response) {
+       	asyncText.setText("异步请求结果: " + response.body().books.get(0).altTitle);
+       }
+       @Override
+       public void onFailure(Call<BookSearchResponse> call, Throwable t) {
+
+       }
+     });
+
+六、关键点解析
+1.引入第三包；
+2.请求方式解析：
+  (1)Get请求
+    路径添加：
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

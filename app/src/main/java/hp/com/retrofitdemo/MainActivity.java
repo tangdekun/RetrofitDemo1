@@ -12,11 +12,11 @@ import hp.com.retrofitdemo.bean.JokeBean;
 import hp.com.retrofitdemo.bean.JsonBean;
 import hp.com.retrofitdemo.inter.JokeInterf;
 import hp.com.rxjava.RxJavaActivity;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import hp.com.utils.RetrofitCreateUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -35,40 +35,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         setContentView(R.layout.activity_main);
 
         mTextView = (TextView) findViewById(R.id.tv);
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .build();
+        mRetrofit = RetrofitCreateUtils.getInstance().createRetrofit(Constant.BASE_URL);
 
-        mRetrofit = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl("http://japi.juhe.cn/")
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+
         JokeInterf jokeInterf = mRetrofit.create(JokeInterf.class);
-//        Call<JsonBean> listCall = jokeInterf.getJokes("383d032d43bb6e903eaccb9ed232c30c",1,20,"asc",1418745237);
-//        listCall.enqueue(new Callback<JsonBean>() {
-//            @Override
-//            public void onResponse(Call<JsonBean> call, Response<JsonBean> response) {
-//                JsonBean jsonBean = response.body();
-//                List<JokeBean> datas = jsonBean.getResult().getDatas();
-//
-//                StringBuilder sb = new StringBuilder();
-//                for (JokeBean jokeBean : datas){
-//                    sb.append(jokeBean.getContent()+"1"+"\n");
-//                    sb.append(jokeBean.getUpdatetime()+"1"+"\n");
-//                }
-//
-//                mTextView.setText(response.toString()+jsonBean.getError_code()+jsonBean.getReason()+"\n"+sb.toString());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JsonBean> call, Throwable t) {
-//
-//            }
-//        });
+        CallJsonBean(jokeInterf);
 
 
 //        Call<ResponseBody> jsonBeanCall = jokeInterf.getJsonBean("383d032d43bb6e903eaccb9ed232c30c",1,20,"asc",1418745237);
@@ -135,6 +106,30 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                         })
 
         );
+    }
+
+    private void CallJsonBean(JokeInterf jokeInterf) {
+        Call<JsonBean> listCall = jokeInterf.getJokes("383d032d43bb6e903eaccb9ed232c30c",1,20,"asc",1418745237);
+        listCall.enqueue(new Callback<JsonBean>() {
+            @Override
+            public void onResponse(Call<JsonBean> call, Response<JsonBean> response) {
+                JsonBean jsonBean = response.body();
+                List<JokeBean> datas = jsonBean.getResult().getDatas();
+
+                StringBuilder sb = new StringBuilder();
+                for (JokeBean jokeBean : datas){
+                    sb.append(jokeBean.getContent()+"1"+"\n");
+                    sb.append(jokeBean.getUpdatetime()+"1"+"\n");
+                }
+
+                mTextView.setText(response.toString()+jsonBean.getError_code()+jsonBean.getReason()+"\n"+sb.toString());
+            }
+
+            @Override
+            public void onFailure(Call<JsonBean> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

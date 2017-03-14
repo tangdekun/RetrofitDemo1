@@ -33,6 +33,7 @@ public class RxJavaActivity extends AppCompatActivity {
             public void onNext(String s) {
                 Toast.makeText(RxJavaActivity.this, s, Toast.LENGTH_SHORT).show();
 
+
             }
         };
 
