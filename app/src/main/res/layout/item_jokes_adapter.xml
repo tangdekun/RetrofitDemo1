@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:elevation="10dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/item_jokes_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text=" 小情侣亲热时，因男友太激情，吻破女友耳膜。这听起来匪夷所思的事情，在现实生活中真的发生了。 2月3日上午10点，耳鼻喉科门诊来了一对小情侣。“女生有27岁，当时问诊，她就说左耳疼痛，不知原因的耳鸣了一个晚上，我便为她做了电耳镜检查，发现她左侧耳朵鼓膜紧张部有个小穿孔，"
+
+
+        />
+        <TextView
+            android:id="@+id/item_jokes_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:gravity="end"
+            android:text="2017-03-15 02:23"
+            android:layout_margin="5dp"
+            />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

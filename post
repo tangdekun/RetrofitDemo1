@@ -1,0 +1,50 @@
+Post请求
+1. @field
+
+Post请求需要把请求参数放置在请求体中，而非拼接在url后面，先来看一个简单的例子
+
+@FormUrlEncoded
+@POST("book/reviews")
+Call<String> addReviews(@Field("book") String bookId, @Field("title") String title,
+@Field("content") String content, @Field("rating") String rating);
+
+这里有几点需要说明的
+
+    @FormUrlEncoded将会自动将请求参数的类型调整为application/x-www-form-urlencoded，假如content传递的参数为Good Luck，那么最后得到的请求体就是
+
+    content=Good+Luck
+
+    FormUrlEncoded不能用于Get请求
+
+    @Field注解将每一个请求参数都存放至请求体中，还可以添加encoded参数，该参数为boolean型，具体的用法为
+
+    @Field(value = "book", encoded = true) String book
+
+    encoded参数为true的话，key-value-pair将会被编码，即将中文和特殊字符进行编码转换
+
+2. @FieldMap
+
+上述Post请求有4个请求参数，假如说有更多的请求参数，那么通过一个一个的参数传递就显得很麻烦而且容易出错，这个时候就可以用FieldMap
+
+@FormUrlEncoded
+@POST("book/reviews")
+Call<String> addReviews(@FieldMap Map<String, String> fields);
+
+3. @Body
+
+如果Post请求参数有多个，那么统一封装到类中应该会更好，这样维护起来会非常方便
+
+@FormUrlEncoded
+@POST("book/reviews")
+Call<String> addReviews(@Body Reviews reviews);
+
+public class Reviews {
+    public String book;
+    public String title;
+    public String content;
+    public String rating;
+}
+
+其他请求方式
+
+除了Get和Post请求，Http请求还包括Put,Delete等等，用法和Post相似，所以就不再单独介绍了。

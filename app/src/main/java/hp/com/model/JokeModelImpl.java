@@ -7,4 +7,5 @@ import  hp.com.contract.JokeContract;
 
 public class JokeModelImpl implements JokeContract.Model{
 
+
 }

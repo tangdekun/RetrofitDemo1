@@ -17,10 +17,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener{
 
@@ -39,7 +35,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
 
         JokeInterf jokeInterf = mRetrofit.create(JokeInterf.class);
-        CallJsonBean(jokeInterf);
+//        CallJsonBean(jokeInterf);
 
 
 //        Call<ResponseBody> jsonBeanCall = jokeInterf.getJsonBean("383d032d43bb6e903eaccb9ed232c30c",1,20,"asc",1418745237);
@@ -76,40 +72,40 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 //                Toast.makeText(MainActivity.this, "tdk"+t.toString(), Toast.LENGTH_SHORT).show();
 //            }
 //        });
-
-        CompositeSubscription mSubscriptions = new CompositeSubscription();
-        mSubscriptions.add(
-                 jokeInterf.getJsonBeanByRxJava("383d032d43bb6e903eaccb9ed232c30c", 1, 20, "asc", 1418745237)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<JsonBean>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(JsonBean jsonBean) {
-                                List<JokeBean> datas = jsonBean.getResult().getDatas();
-                                StringBuilder sb = new StringBuilder();
-                                for (JokeBean jokeBean : datas) {
-                                    sb.append(jokeBean.getContent() + "1" + "\n");
-                                    sb.append(jokeBean.getUpdatetime() + "1" + "\n");
-                                }
-                                mTextView.setText(jsonBean.getError_code() + jsonBean.getReason() + "\n" + sb.toString());
-                            }
-                        })
-
-        );
+//
+//        CompositeSubscription mSubscriptions = new CompositeSubscription();
+//        mSubscriptions.add(
+//                 jokeInterf.getJsonBeanByRxJava("383d032d43bb6e903eaccb9ed232c30c", 1, 20, "asc", 1418745237)
+//                        .subscribeOn(Schedulers.io())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribe(new Observer<JsonBean>() {
+//                            @Override
+//                            public void onCompleted() {
+//
+//                            }
+//
+//                            @Override
+//                            public void onError(Throwable e) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onNext(JsonBean jsonBean) {
+//                                List<JokeBean> datas = jsonBean.getResult().getDatas();
+//                                StringBuilder sb = new StringBuilder();
+//                                for (JokeBean jokeBean : datas) {
+//                                    sb.append(jokeBean.getContent() + "1" + "\n");
+//                                    sb.append(jokeBean.getUpdatetime() + "1" + "\n");
+//                                }
+//                                mTextView.setText(jsonBean.getError_code() + jsonBean.getReason() + "\n" + sb.toString());
+//                            }
+//                        })
+//
+//        );
     }
 
     private void CallJsonBean(JokeInterf jokeInterf) {
-        Call<JsonBean> listCall = jokeInterf.getJokes("383d032d43bb6e903eaccb9ed232c30c",1,20,"asc",1418745237);
+        Call<JsonBean> listCall = jokeInterf.getJsonBean("383d032d43bb6e903eaccb9ed232c30c",1,20,"asc",1418745237);
         listCall.enqueue(new Callback<JsonBean>() {
             @Override
             public void onResponse(Call<JsonBean> call, Response<JsonBean> response) {
@@ -137,6 +133,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         switch(view.getId()){
             case R.id.rxjava_bt:
                 startActivity(new Intent(MainActivity.this, RxJavaActivity.class));
+            break;
+            case R.id.retrofit_bt:
+                startActivity(new Intent(MainActivity.this,Main2Activity.class));
             break;
         }
 
