@@ -232,7 +232,7 @@ public class JokePresenterImpl implements JokeContract.Presenter {
     /**
      * @param page
      * @param mJokeInterf
-     * 使用Post方法将获得的数据直接转化为JsonBean
+     * 使用Post方法获取数据并直接转化为JsonBean
      */
     private void getDataWithPost(int page, JokeInterf mJokeInterf) {
 //        http://japi.juhe.cn/joke/content/list.from
@@ -244,7 +244,8 @@ public class JokePresenterImpl implements JokeContract.Presenter {
             @Override
             public void onResponse(Call<JsonBean> call, Response<JsonBean> response) {
                 try {
-//                    Logger.t(TAG).d(jsonBean.getResult().getDatas().get(0).getContent());
+                    Logger.t(TAG).d(response.body().getResult().getDatas().size()+"|"+response.body().getResult()
+                            .getDatas().get(0).getContent());
                     view.fillRecyclerViewdata(response.body().getResult().getDatas());
 
                 } catch (Exception e) {
@@ -259,6 +260,71 @@ public class JokePresenterImpl implements JokeContract.Presenter {
         });
 
     }
+    /**
+     * @param page
+     * @param mJokeInterf
+     * 使用Post方法获取数据并直接转化为JsonBean
+     */
+    private void getDataWithPostByObservable(int page, JokeInterf mJokeInterf) {
+//        http://japi.juhe.cn/joke/content/list.from
+        Call<JsonBean> responseBodyCall = mJokeInterf.getJsonBeanWithPost("content","list.from",page,pageSize,"desc",
+                DateFormatUtils
+                        .getInstance().getCurrentTime()
+        );
+        responseBodyCall.enqueue(new Callback<JsonBean>() {
+            @Override
+            public void onResponse(Call<JsonBean> call, Response<JsonBean> response) {
+                try {
+                    Logger.t(TAG).d(response.body().getResult().getDatas().size()+"|"+response.body().getResult()
+                            .getDatas().get(0).getContent());
+                    view.fillRecyclerViewdata(response.body().getResult().getDatas());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonBean> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    /**
+     * @param page
+     * @param mJokeInterf
+     * 使用Post方法获取数据并直接转化为JsonBean
+     */
+    private void getJokePictureWithPostByObservale(int page, JokeInterf mJokeInterf) {
+//        http://japi.juhe.cn/joke/content/list.from
+//        Observable<JokePictureBean> responseBodyCall = mJokeInterf.getJsonBeanWithPost("content","list.from",page,pageSize,"desc",
+//                DateFormatUtils
+//                        .getInstance().getCurrentTime()
+//        );
+//        responseBodyCall.enqueue(new Callback<JsonBean>() {
+//            @Override
+//            public void onResponse(Call<JsonBean> call, Response<JsonBean> response) {
+//                try {
+//                    Logger.t(TAG).d(response.body().getResult().getDatas().size()+"|"+response.body().getResult()
+//                            .getDatas().get(0).getContent());
+//                    view.fillRecyclerViewdata(response.body().getResult().getDatas());
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonBean> call, Throwable t) {
+//
+//            }
+//        });
+
+    }
+
+
 
     Handler myHandler = new Handler(){
         @Override

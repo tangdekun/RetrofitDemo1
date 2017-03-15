@@ -3,11 +3,13 @@ package hp.com.retrofitdemo.inter;
 
 import java.util.Map;
 
+import hp.com.retrofitdemo.bean.JokeOptionsBody;
 import hp.com.retrofitdemo.bean.JokePictureBean;
 import hp.com.retrofitdemo.bean.JsonBean;
 import hp.com.retrofitdemo.bean.SimpleBean;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -58,6 +60,15 @@ public interface JokeInterf {
     Call<JsonBean> getJsonBeanWithPost(@Path("content") String content,@Path("from")String form,
                                        @Field("page") int page,@Field("pagesize") int pagesize,@Field("sort") String
                                                sort, @Field("time") long time);
+
+    @FormUrlEncoded
+    @POST("joke/{content}/{from}")
+    Observable<JsonBean> getJsonBeanWithPostByObservable(@Path("content") String content,@Path("from")String form,
+                                       @FieldMap Map<String,Object> options);
+
+    @FormUrlEncoded
+    @POST("book/reviews")
+    Observable<JokeOptionsBody> getJokePictureWithPostByObservable(@Body JokeOptionsBody options);
 
 
 
