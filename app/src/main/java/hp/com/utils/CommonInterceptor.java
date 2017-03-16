@@ -22,8 +22,6 @@ public class CommonInterceptor implements Interceptor {
                 .addQueryParameter("key","383d032d43bb6e903eaccb9ed232c30c")
                 .build();
          Request request = originalRequest.newBuilder().url(modefiedUrl).build();
-
-
         return chain.proceed(request);
     }
 }

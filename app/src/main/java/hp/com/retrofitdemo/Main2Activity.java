@@ -9,63 +9,71 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import hp.com.adapter.JokesJokeBeanApapter;
 import hp.com.base.BasePresenterActivity;
 import hp.com.contract.JokeContract;
 import hp.com.presenter.JokePresenterImpl;
 import hp.com.retrofitdemo.bean.JokeBean;
-import hp.com.retrofitdemo.bean.SimpleBean;
 
 public class Main2Activity extends BasePresenterActivity<JokeContract.Presenter, JokeContract.View> implements
-        JokeContract.View {
+        JokeContract.View,SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = Main2Activity.class.getSimpleName();
 
-    //    @BindView(R.id.recycler_main2)
-//    RecyclerView recyclerMain2;
-//    @BindView(R.id.swipe_main2)
-//    SwipeRefreshLayout swipeMain2;
+    @BindView(R.id.recycler_main2)
+    RecyclerView recyclerMain2;
+    @BindView(R.id.swipe_main2)
+    SwipeRefreshLayout swipeMain2;
     List<JokeBean> jokeBeanList;
     JokesJokeBeanApapter mJokesApapter;
     RecyclerView.LayoutManager layoutManager;
-    RecyclerView recyclerMain2;
-    SwipeRefreshLayout swipeMain2;
+    private  int page = 1;
+//    RecyclerView recyclerMain2;
+//    SwipeRefreshLayout swipeMain2;
 
 
     @Override
     public JokeContract.Presenter createPresenter() {
-        return new JokePresenterImpl();
+        return new JokePresenterImpl(this);
     }
 
     @Override
     public void onPresenterCreate(@Nullable Bundle paramBundle) {
         setContentView(R.layout.activity_main2);
-        getPresenter().getData(1);
+        ButterKnife.bind(this);
+        getPresenter().getData(page++);
         recyclerMain2 = (RecyclerView) findViewById(R.id.recycler_main2);
         swipeMain2 = (SwipeRefreshLayout) findViewById(R.id.swipe_main2);
-//        jokeBeanList = new ArrayList<JokeBean>();
-//        swipeMain2.setColorSchemeResources(android.R.color.holo_blue_light,
-//                android.R.color.holo_green_light,
-//                android.R.color.holo_purple,
-//                android.R.color.holo_red_light
-//        );
+        jokeBeanList = new ArrayList<JokeBean>();
+        swipeMain2.setColorSchemeResources(android.R.color.holo_blue_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_purple,
+                android.R.color.holo_red_light
+        );
+        swipeMain2.setOnRefreshListener(this);
 
 
     }
 
     @Override
-    public void fillRecyclerViewDataSimple(List<SimpleBean.ResultSimple.DataSimple> mdata) {
+    public void fillRecyclerViewDataSimple(List<JokeBean> mdata) {
 
     }
 
     @Override
-    public void updateRecyclerViewdata(List<SimpleBean.ResultSimple.DataSimple> mdata) {
+    public void updateRecyclerViewdata(List<JokeBean> mdata) {
+        jokeBeanList.addAll(mdata);
+        mJokesApapter.notifyDataSetChanged();
+        swipeMain2.setRefreshing(false);
 
     }
 
     @Override
-    public void refreshRecyclerViewdata(List<SimpleBean.ResultSimple.DataSimple> mdata) {
+    public void refreshRecyclerViewdata(List<JokeBean> mdata) {
 
     }
 
@@ -84,4 +92,23 @@ public class Main2Activity extends BasePresenterActivity<JokeContract.Presenter,
         recyclerMain2.setAdapter(mJokesApapter);
 
     }
+
+    @Override
+    public void onRefresh() {
+        getPresenter().getMoreData(page++);
+
+    }
+
+
+    @Override
+    public void dismissProgress() {
+        swipeMain2.setRefreshing(false);
+    }
+
+    @Override
+    public void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+
 }

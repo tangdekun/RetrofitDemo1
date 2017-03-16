@@ -1,5 +1,6 @@
 package hp.com.presenter;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import hp.com.contract.JokeContract;
 import hp.com.retrofitdemo.Constant;
+import hp.com.retrofitdemo.R;
 import hp.com.retrofitdemo.bean.JsonBean;
 import hp.com.retrofitdemo.inter.JokeInterf;
 import hp.com.utils.DateFormatUtils;
@@ -37,12 +39,16 @@ public class JokePresenterImpl implements JokeContract.Presenter {
     private JokeContract.View view;
     private JokeContract.Model model;
     private Retrofit retrofit;
+    JokeInterf   mJokeInterf;
     private int pageSize = 20;
     private Gson gson;
+    private Context context;
 
 
-    public JokePresenterImpl() {
+    public JokePresenterImpl(Context mContext) {
+        this.context = mContext;
         retrofit = RetrofitCreateUtils.getInstance().createRetrofit(Constant.BASE_URL);
+        mJokeInterf = retrofit.create(JokeInterf.class);
         gson = new Gson();
     }
 
@@ -68,12 +74,18 @@ public class JokePresenterImpl implements JokeContract.Presenter {
 
     @Override
     public void getData(int page) {
-        JokeInterf   mJokeInterf = retrofit.create(JokeInterf.class);
+
 //        getDataResponseBody(page, mJokeInterf);
 //        getDataJackBean(page, mJokeInterf);
-//        getDataWithObservable(page,mJokeInterf);
-//          getDataJackBeanSync(page,mJokeInterf);
-        getDataWithPost(page,mJokeInterf);
+          getDataWithObservable(page,mJokeInterf);
+//        getDataJackBeanSync(page,mJokeInterf);
+//        getDataWithPost(page,mJokeInterf);
+    }
+
+    @Override
+    public void getMoreData(int page) {
+        getDataJackBean(page, mJokeInterf);
+
     }
 
     /**
@@ -132,8 +144,9 @@ public class JokePresenterImpl implements JokeContract.Presenter {
             @Override
             public void onResponse(Call<JsonBean> call, Response<JsonBean> response) {
                 try {
-//                    Logger.t(TAG).d(jsonBean.getResult().getDatas().get(0).getContent());
-                    view.fillRecyclerViewdata(response.body().getResult().getDatas());
+                    Logger.t(TAG).d(response.body().getResult().getDatas().get(0).getContent());
+//                    view.fillRecyclerViewdata(response.body().getResult().getDatas());
+                    view.updateRecyclerViewdata(response.body().getResult().getDatas());
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -142,6 +155,8 @@ public class JokePresenterImpl implements JokeContract.Presenter {
 
             @Override
             public void onFailure(Call<JsonBean> call, Throwable t) {
+                Logger.t(TAG).e(t,t.getMessage());
+                view.showToast(context.getString(R.string.joke_get_datas_fails));
 
             }
         });
